@@ -5,6 +5,20 @@
     <title>test</title>
     <link rel="stylesheet" href="css/test.css">
 </head>
+<script>
+    function hasClass(obj, cls) {
+        return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+    }
+
+    function addClass(obj, cls) {
+        if (!this.hasClass(obj, cls)) obj.className += " " + cls;
+    }
+
+    function clickBtn() {
+        var img = document.getElementsByClassName('triangle')[0];
+        addClass(img, 'path7');
+    }
+</script>
 <body>
 
 <div class="box">
@@ -15,19 +29,32 @@
         <div>
             <span class="sx1"></span>
             <span class="sx2"></span>
-            <em></em>
+            <span class="sx3"></span>
+            <span class="ok">OK</span>
         </div>
     </div>
     <div class="wrapper circleprogress">
         <div>
             <span class="left"><em class="circle"></em></span>
             <span class="right"><em class="circle"></em></span>
-            <p class="text">↓️</p>
+            <p class="text"></p>
             <p class="finished"></p>
         </div>
     </div>
 
+    <div class="wrapper favorite">
+        <div class="heart">
+            <span class="left"></span>
+            <span class="right"></span>
+        </div>
+    </div>
 </div>
+
+<div id="heart"></div>
+
+<!--<img src="images/bike.jpg" class="triangle path6">-->
+<p class="triangle path6"></p>
+<button id="button" onclick="clickBtn()">变身</button>
 
 </body>
 </html>
