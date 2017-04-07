@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/parabola.css">
+    <script src="js/parabola.js" type="text/javascript"></script>
+    <script src="js/tween.js" type="text/javascript"></script>
+    <script src="js/animation.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="ball"></div>
+    <div class="container"></div>
+</div>
+<div class="wrapper">
+    <div class="ball"></div>
+    <div class="container"></div>
+</div>
+<div class="wrapper">
+    <div class="ball"></div>
+    <div class="container"></div>
+</div>
+
+<span class="up" onclick="upTop()">回到顶部</span>
+
+<script>
+    var element = document.querySelector('.ball'),
+        target = document.querySelector('.container');
+
+    var parabola = funParabola(element, target).mark();
+
+    document.body.onclick = function() {
+        element.style.marginLeft = "0px";
+        element.style.marginTop = "0px";
+        parabola.init();
+    };
+
+    var up = document.querySelector('.up');
+
+    function upTop() {
+        Math.animation(window.pageYOffset, 0, function (value) {
+            document.body.scrollTop = value;
+        }, 'Quart.easeOut', 600);
+    }
+
+</script>
+</body>
+</html>
