@@ -139,6 +139,62 @@
 	            }
             }
         }).init();
+
+	    // 贝尔赛曲线
+	    context.beginPath();
+	    context.moveTo(75,25);
+	    context.quadraticCurveTo(25,25,25,62.5);
+	    context.lineTo(25, 80);
+	    context.quadraticCurveTo(25,100,50,100);
+	    context.quadraticCurveTo(50,120,30,125);
+	    context.quadraticCurveTo(60,120,65,100);
+	    context.quadraticCurveTo(125,100,125,62.5);
+	    context.quadraticCurveTo(125,25,75,25);
+	    context.strokeStyle = 'green';
+	    context.lineWidth = 1;
+	    context.stroke();
+
+	    // 贝尔赛曲线
+	    context.beginPath();
+	    context.moveTo(100,200);
+	    context.quadraticCurveTo(100,180,130,180);
+	    context.lineTo(180, 180);
+	    context.quadraticCurveTo(210,180,210,200);
+	    context.lineTo(210, 220);
+	    context.quadraticCurveTo(210,240,180,240);
+	    context.lineTo(150, 240);
+	    context.lineTo(140, 260);
+	    context.lineTo(130, 240);
+	    context.quadraticCurveTo(100,240,100,220);
+	    context.lineTo(100, 200);
+	    context.strokeStyle = 'green';
+	    context.lineWidth = 1;
+	    context.stroke();
+
+        ({
+        	drawHeart: function () {
+                //二次曲线
+		        context.beginPath();
+		        context.moveTo(175,340);
+		        context.bezierCurveTo(175,337,165,325,150,325);
+		        context.bezierCurveTo(120,325,120,362.5,120,362.5);
+		        context.bezierCurveTo(120,380,140,402,175,420);
+		        context.bezierCurveTo(210,402,230,380,230,362.5);
+		        context.bezierCurveTo(230,362.5,230,325,200,325);
+		        context.bezierCurveTo(185,325,175,337,175,340);
+		        context.fillStyle = 'darkred';
+		        context.fill();
+	        },
+
+            init: function () {
+	            var a = document.querySelector(".wrapper");
+	            if (a) {
+		            this.drawHeart();
+	            }
+            }
+        }).init();
+
+
     }
 
 
