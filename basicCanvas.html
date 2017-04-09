@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas基础图形绘制</title>
+    <script src="js/tween.js" type="text/javascript"></script>
+    <script src="js/animation.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="wrapper">
+    <canvas class="box"></canvas>
+</div>
+
+<script>
+    var canvas = document.querySelector('.box');
+    var context = canvas.getContext('2d');
+    canvas.width = canvas.height = 600;
+
+    if(context) {
+    	context.fillStyle = '#000';
+    	context.fillRect(0, 0, canvas.width, canvas.height);
+    	context.clearRect(20, 20, canvas.width - 40, canvas.height - 40);
+	    context.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+	    context.beginPath();
+	    context.moveTo(45, 70);
+	    context.lineTo(70, 45);
+	    context.lineTo(70, 95);
+	    context.fill();
+
+	    context.beginPath();
+	    context.arc(205,105,50,0,Math.PI*2,true); // 绘制
+	    context.moveTo(240,105);
+	    context.arc(205,105,35,0,Math.PI,false);  // 口(false：顺时针, true：逆时针)
+	    context.moveTo(195,85);
+	    context.arc(190,85,5,0,Math.PI*2,true);   // 左眼
+	    context.moveTo(225,85);
+	    context.arc(220,85,5,0,Math.PI*2,true);   // 右眼
+	    context.stroke();
+
+
+        ({
+        	drawFillRound: function () {
+		        var store = {};
+
+		        var Ball = function () {
+			        this.r = -Math.PI * 0.5;
+			        this.moveR = Math.PI * 2 / 360;
+
+			        this.draw = function () {
+				        context.beginPath();
+				        context.moveTo(350, 120);
+				        context.lineTo(350, 180);
+				        context.arc(350, 180, 60, -Math.PI * 0.5, this.r, false);
+				        context.lineTo(350, 180);
+				        context.fill();
+			        };
+		        };
+
+		        store[0] = new Ball();
+
+		        var drawRound = function() {
+			        Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
+			        	//console.log(value);
+				        store[0].r = value;
+				        if(value < Math.PI * 1.5) {
+				        	//console.log(value);
+					        // 根据新位置绘制圆圈圈
+					        store[0].draw();
+				        }else {
+					        store[0].r = Math.PI * 1.5;
+					        store[0].draw();
+				        }
+			        }, 'Quart.easeInOut', 2000);
+		        };
+
+		        function initCanvas() {
+			        context.clearRect(290, 120, 120, 120);
+		        }
+
+		        function render() {
+			        initCanvas();
+			        drawRound();
+			        //requestAnimationFrame(render);
+		        }
+
+		        render();
+	        },
+            drawBorderRound: function() {
+
+	            var store = {};
+
+	            var Ball = function () {
+		            this.r = -Math.PI * 0.5;
+		            this.moveR = Math.PI * 2 / 360;
+
+		            this.draw = function () {
+			            context.beginPath();
+			            context.arc(350, 380, 60, -Math.PI * 0.5, this.r, false);
+			            context.strokeStyle = 'darkred';
+			            context.lineWidth = 10;
+			            context.stroke();
+		            };
+	            };
+
+	            store[0] = new Ball();
+
+	            var drawRound = function() {
+		            // 位置变化
+		            Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
+		            	store[0].r = value;
+			            if(value < Math.PI * 1.5) {
+				            store[0].draw();
+			            }else {
+				            store[0].r = Math.PI * 1.5;
+				            store[0].draw();
+			            }
+		            }, 'Quart.easeInOut', 2000);
+	            };
+
+	            function initCanvas() {
+		            context.clearRect(290, 320, 120, 120);
+	            }
+
+	            function render() {
+		            initCanvas();
+		            drawRound();
+		            //requestAnimationFrame(render);
+	            }
+
+	            render();
+            },
+            init: function() {
+	            var a = document.querySelector(".wrapper");
+	            if (a) {
+		            this.drawFillRound();
+		            this.drawBorderRound();
+	            }
+            }
+        }).init();
+    }
+
+
+</script>
+
+</body>
+</html>

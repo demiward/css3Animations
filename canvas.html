@@ -9,15 +9,19 @@
 
 <div id="container">
     <canvas id="starCanvas"></canvas>
+    <canvas id="starSignCanvas"></canvas>
 
     <div class="wrapper">
         <canvas id="round"></canvas>
         <div class="ball"></div>
+        <p class="text">地球脉动</p>
+        <p class="textEng">PLANET EARTH</p>
     </div>
 
 </div>
 
 <script>
+
 	// requestAnimationFrame的向下兼容处理
 	if (!window.requestAnimationFrame) {
 		window.requestAnimationFrame = function(fn) {
@@ -27,6 +31,7 @@
 
     ({
     	drawRoundBg: function () {
+		    var ball = document.querySelector('.ball');
 		    var canvas = document.querySelector('#round');
 		    var con = canvas.getContext('2d');
 		    var num = 300;
@@ -34,11 +39,20 @@
 		    var index = 0;
 		    var alpha =  0,
 			    maxAlpha = 1;
+		    var radius = 0;
+
 
 		    function i() {
 			    canvas.width = canvas.parentNode.clientWidth;
 			    canvas.height = canvas.parentNode.clientHeight;
-            }
+			    var width = ball.parentNode.clientWidth * 0.8;
+
+			    radius = width / 2;
+			    ball.style.height = width + 'px';
+			    ball.style.width = width + 'px';
+			    ball.style.borderRadius = radius + 'px';
+			    ball.style.marginLeft = width / 8 + 'px';
+		    }
 
             i();
 
@@ -56,8 +70,8 @@
 		    //初始化画布
 		    function initCanvas() {
 			    con.clearRect(0, 0, canvas.width, canvas.height);
-			    con.fillStyle = "rgba(0,0,0,0)";
-			    con.fillRect(0, 0, canvas.width, canvas.height)
+			    con.fillStyle = "#000";
+			    con.fillRect(0, 0, canvas.width, canvas.height);
 		    }
 
 		    function initData() {
@@ -65,9 +79,9 @@
 			    this.x = Math.floor(Math.random() * canvas.width);
 			    //this.y = canvas.height / 2 + (Math.random() > 0.5 ? 1 : "-1") * canvas.height / 2 * a();
 			    //this.y = canvas.height - (Math.sqrt(600 * 600 - (this.x - canvas.width / 2) * (this.x - canvas.width / 2)) - 400) - canvas.height / 2 * a();
-			    this.y = 1000 - Math.sqrt(600 * 600 - (this.x - canvas.width / 2) * (this.x - canvas.width / 2)) - canvas.height / 2 * a();
+			    this.y = 400 + radius - Math.sqrt(radius * radius - (this.x - canvas.width / 2) * (this.x - canvas.width / 2)) - (Math.sqrt((radius + 100) * (radius + 100) - (this.x - canvas.width / 2) * (this.x - canvas.width / 2)) / 2 * a());
 			    this.moveX = Math.random() * 0.05 + 0.025;
-                this.moveY = 1000 - this.y - Math.sqrt(canvas.width*this.moveX - 2*this.moveX*this.x - this.moveX*this.moveX + (this.y - 1000)*(this.y - 1000));
+                this.moveY = 400 + radius - this.y - Math.sqrt(canvas.width*this.moveX - 2*this.moveX*this.x - this.moveX * this.moveX + (this.y - 400 - radius)*(this.y - 400 - radius));
 			    this.r = 0.5 + (Math.random() + 0.1 / 4);
 			    index++;
 			    store[index] = this;
@@ -93,8 +107,12 @@
 		            }
 	            }
 
-		    	if((this.x + this.r * 2) >= canvas.width) {
+		    	/*if((this.x + this.r * 2) >= canvas.width) {
 		    		this.x  = this.x - canvas.width;
+                }*/
+
+                if((this.y + this.r *2) >= canvas.height) {
+	            	this.x = canvas.width - this.x;
                 }
 
 	            // 根据此时x位置重新绘制圆圈圈
@@ -178,7 +196,7 @@
             //初始化画布
             function j() {
                 c.clearRect(0, 0, d.width, d.height);
-                c.fillStyle = "rgba(0,0,0,0)";
+                c.fillStyle = "rgba(0,0,0,1)";
                 c.fillRect(0, 0, d.width, d.height)
             }
 
@@ -214,7 +232,6 @@
                 }
                 c.beginPath();
                 c.fillStyle = "rgba(255,255,255," + this.alpha.toString() + ")";
-                //c.fillStyle = "rgb(255, 255, 255)";
                 c.arc(this.x, this.y, this.particleSize, 0, Math.PI * 2, true);
                 c.closePath();
                 c.fill();
@@ -238,20 +255,22 @@
             }
             b()
         },
-        /*drawStarSwitch: function() {
+        drawStarSwitch: function() {
             var k = this;
             var b = document.querySelector("#starSignCanvas");
             if (!b) {
                 return
             }
-            b.height = b.width = b.parentNode.clientHeight;
+            //b.height = b.width = b.parentNode.clientHeight;
+            b.height = b.width = 600;
             var a = b.getContext("2d");
             var h = b.width / 2;
             var e = b.height / 2;
-            var g = [{
-                pos: [[h + 9, e - 89], [h + 64, e - 100], [h + 95, e - 67], [h + 100, e - 20], [h + 76, e + 15], [h + 37, e + 37], [h - 25, e + 62], [h - 60, e + 20], [h - 80, e - 24], [h - 85, e - 68], [h - 67, e - 109], [h - 28, e - 123]],
-                line: ["2-1", "3-2", "4-3", "5-4", "6-5", "7-6", "8-7", "9-8", "10-9", "11-10", "12-11", "12-1"]
-            },
+            var g = [
+            	{
+                    pos: [[h + 9, e - 89], [h + 64, e - 100], [h + 95, e - 67], [h + 100, e - 20], [h + 76, e + 15], [h + 37, e + 37], [h - 25, e + 62], [h - 60, e + 20], [h - 80, e - 24], [h - 85, e - 68], [h - 67, e - 109], [h - 28, e - 123]],
+                    line: ["2-1", "3-2", "4-3", "5-4", "6-5", "7-6", "8-7", "9-8", "10-9", "11-10", "12-11", "12-1"]
+                },
                 {
                     pos: [[h + 46, e - 127], [h + 39, e - 84], [h + 32, e - 39], [h + 23, e + 17], [h + 14, e + 59], [h - 30, e + 30], [h - 60, e - 26], [h - 52, e - 68], [h - 9, e - 111], [h - 111, e - 64], [h + 78, e - 30], [h + 108, e - 55], [h + 100, e + 1]],
                     line: ["2-1", "3-2", "4-3", "5-4", "6-5", "7-6", "8-7", "9-8", "9-1", "11-10", "12-11", "13-11"]
@@ -276,7 +295,7 @@
                 l = {};
             var d = {
                 index: 0,
-                durtion: 100,
+                duration: 100,
                 time: 1000,
                 ElasticEaseOut: function(o, m, v, u, n, r) {
                     var q;
@@ -402,8 +421,8 @@
                 var m = function() {
                     a.clearRect(0, 0, b.width, b.height);
                     r.forEach(function(v, w) {
-                        var y = d.ElasticEaseOut(n, t[w][0], v[0] - t[w][0], d.durtion);
-                        var x = d.ElasticEaseOut(n, t[w][1], v[1] - t[w][1], d.durtion);
+                        var y = d.ElasticEaseOut(n, t[w][0], v[0] - t[w][0], d.duration);
+                        var x = d.ElasticEaseOut(n, t[w][1], v[1] - t[w][1], d.duration);
                         c[w].x = y;
                         c[w].y = x;
                         c[w].draw()
@@ -412,7 +431,7 @@
                         l[v].draw()
                     });
                     n++;
-                    if (n <= d.durtion) {
+                    if (n <= d.duration) {
                         requestAnimationFrame(m)
                     } else {
                         k.isRendering = false;
@@ -432,8 +451,8 @@
             };
             i();
             return this
-        },*/
-        /*starSignImgSwitch: function(c) {
+        },
+        starSignImgSwitch: function(c) {
             var b = this;
             var a = document.querySelectorAll("#container img");
             var d = document.querySelector("#container .active");
@@ -443,13 +462,13 @@
             if (a[c]) {
                 a[c].classList.add("active")
             }
-        },*/
+        },
         init: function() {
             var a = document.querySelector("#container");
             if (a) {
                 this.drawStarBg();
-                //this.drawStarSwitch();
-                //a.classList.add("inited")
+                this.drawStarSwitch();
+                a.classList.add("inited")
             }
         }
     }).init();
