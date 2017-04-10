@@ -5,198 +5,458 @@
     <title>canvas基础图形绘制</title>
     <script src="js/tween.js" type="text/javascript"></script>
     <script src="js/animation.js" type="text/javascript"></script>
+    <style rel="stylesheet">
+        body {
+
+        }
+        .wrapper {
+
+        }
+
+        .wrapper canvas {
+            position: relative;
+        }
+
+        .image-box img {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
 <div class="wrapper">
     <canvas class="box"></canvas>
+    <canvas class="box2"></canvas>
+    <canvas class="box3"></canvas>
+</div>
+
+<div class="image-box">
+    <img src="images/1.jpg" width="200">
+    <img src="images/2.jpg" width="200">
+    <img src="images/3.jpg" width="200">
+    <img src="images/4.jpg" width="200">
+    <img id="frame" src="images/frame.png" width="200">
 </div>
 
 <script>
-    var canvas = document.querySelector('.box');
-    var context = canvas.getContext('2d');
-    canvas.width = canvas.height = 600;
 
-    if(context) {
-    	context.fillStyle = '#000';
-    	context.fillRect(0, 0, canvas.width, canvas.height);
-    	context.clearRect(20, 20, canvas.width - 40, canvas.height - 40);
-	    context.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+    window.onload=function() {
+        var canvas = document.querySelector('.box');
+        var context = canvas.getContext('2d');
+        canvas.width = canvas.height = 600;
 
-	    context.beginPath();
-	    context.moveTo(45, 70);
-	    context.lineTo(70, 45);
-	    context.lineTo(70, 95);
-	    context.fill();
+        if (context) {
+            context.fillStyle = '#000';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.clearRect(20, 20, canvas.width - 40, canvas.height - 40);
+            context.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
-	    context.beginPath();
-	    context.arc(205,105,50,0,Math.PI*2,true); // 绘制
-	    context.moveTo(240,105);
-	    context.arc(205,105,35,0,Math.PI,false);  // 口(false：顺时针, true：逆时针)
-	    context.moveTo(195,85);
-	    context.arc(190,85,5,0,Math.PI*2,true);   // 左眼
-	    context.moveTo(225,85);
-	    context.arc(220,85,5,0,Math.PI*2,true);   // 右眼
-	    context.stroke();
+            context.beginPath();
+            context.moveTo(45, 70);
+            context.lineTo(70, 45);
+            context.lineTo(70, 95);
+            context.fill();
+
+            context.beginPath();
+            context.arc(205, 105, 50, 0, Math.PI * 2, true); // 绘制
+            context.moveTo(240, 105);
+            context.arc(205, 105, 35, 0, Math.PI, false);  // 口(false：顺时针, true：逆时针)
+            context.moveTo(195, 85);
+            context.arc(190, 85, 5, 0, Math.PI * 2, true);   // 左眼
+            context.moveTo(225, 85);
+            context.arc(220, 85, 5, 0, Math.PI * 2, true);   // 右眼
+            context.stroke();
 
 
-        ({
-        	drawFillRound: function () {
-		        var store = {};
+            ({
+                drawFillRound: function () {
+                    var store = {};
 
-		        var Ball = function () {
-			        this.r = -Math.PI * 0.5;
-			        this.moveR = Math.PI * 2 / 360;
+                    var Ball = function () {
+                        this.r = -Math.PI * 0.5;
+                        this.moveR = Math.PI * 2 / 360;
 
-			        this.draw = function () {
-				        context.beginPath();
-				        context.moveTo(350, 120);
-				        context.lineTo(350, 180);
-				        context.arc(350, 180, 60, -Math.PI * 0.5, this.r, false);
-				        context.lineTo(350, 180);
-				        context.fill();
-			        };
-		        };
+                        this.draw = function () {
+                            context.beginPath();
+                            context.moveTo(350, 120);
+                            context.lineTo(350, 180);
+                            context.arc(350, 180, 60, -Math.PI * 0.5, this.r, false);
+                            context.lineTo(350, 180);
+                            context.fillStyle = '#000';
+                            context.fill();
+                        };
+                    };
 
-		        store[0] = new Ball();
+                    store[0] = new Ball();
 
-		        var drawRound = function() {
-			        Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
-			        	//console.log(value);
-				        store[0].r = value;
-				        if(value < Math.PI * 1.5) {
-				        	//console.log(value);
-					        // 根据新位置绘制圆圈圈
-					        store[0].draw();
-				        }else {
-					        store[0].r = Math.PI * 1.5;
-					        store[0].draw();
-				        }
-			        }, 'Quart.easeInOut', 2000);
-		        };
+                    var drawRound = function () {
+                        Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
+                            //console.log(value);
+                            store[0].r = value;
+                            if (value < Math.PI * 1.5) {
+                                //console.log(value);
+                                // 根据新位置绘制圆圈圈
+                                store[0].draw();
+                            } else {
+                                store[0].r = Math.PI * 1.5;
+                                store[0].draw();
+                            }
+                        }, 'Quart.easeInOut', 2000);
+                    };
 
-		        function initCanvas() {
-			        context.clearRect(290, 120, 120, 120);
-		        }
+                    function initCanvas() {
+                        context.clearRect(290, 120, 120, 120);
+                    }
 
-		        function render() {
-			        initCanvas();
-			        drawRound();
-			        //requestAnimationFrame(render);
-		        }
+                    function render() {
+                        initCanvas();
+                        drawRound();
+                        //requestAnimationFrame(render);
+                    }
 
-		        render();
+                    render();
+                },
+                drawBorderRound: function () {
+
+                    var store = {};
+
+                    var Ball = function () {
+                        this.r = -Math.PI * 0.5;
+                        this.moveR = Math.PI * 2 / 360;
+
+                        this.draw = function () {
+                            context.beginPath();
+                            context.arc(350, 380, 60, -Math.PI * 0.5, this.r, false);
+                            context.strokeStyle = 'darkred';
+                            context.lineWidth = 10;
+                            context.stroke();
+                        };
+                    };
+
+                    store[0] = new Ball();
+
+                    var drawRound = function () {
+                        // 位置变化
+                        Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
+                            store[0].r = value;
+                            if (value < Math.PI * 1.5) {
+                                store[0].draw();
+                            } else {
+                                store[0].r = Math.PI * 1.5;
+                                store[0].draw();
+                            }
+                        }, 'Quart.easeInOut', 2000);
+                    };
+
+                    function initCanvas() {
+                        context.clearRect(290, 320, 120, 120);
+                    }
+
+                    function render() {
+                        initCanvas();
+                        drawRound();
+                        //requestAnimationFrame(render);
+                    }
+
+                    render();
+                },
+                init: function () {
+                    var a = document.querySelector(".wrapper");
+                    if (a) {
+                        this.drawFillRound();
+                        this.drawBorderRound();
+                    }
+                }
+            }).init();
+
+            // 贝尔赛曲线
+            context.beginPath();
+            context.moveTo(75, 25);
+            context.quadraticCurveTo(25, 25, 25, 62.5);
+            context.lineTo(25, 80);
+            context.quadraticCurveTo(25, 100, 50, 100);
+            context.quadraticCurveTo(50, 120, 30, 125);
+            context.quadraticCurveTo(60, 120, 65, 100);
+            context.quadraticCurveTo(125, 100, 125, 62.5);
+            context.quadraticCurveTo(125, 25, 75, 25);
+            context.strokeStyle = 'green';
+            context.lineWidth = 1;
+            context.stroke();
+
+            // 贝尔赛曲线
+            context.beginPath();
+            context.moveTo(100, 200);
+            context.quadraticCurveTo(100, 180, 130, 180);
+            context.lineTo(180, 180);
+            context.quadraticCurveTo(210, 180, 210, 200);
+            context.lineTo(210, 220);
+            context.quadraticCurveTo(210, 240, 180, 240);
+            context.lineTo(150, 240);
+            context.lineTo(140, 260);
+            context.lineTo(130, 240);
+            context.quadraticCurveTo(100, 240, 100, 220);
+            context.lineTo(100, 200);
+            context.strokeStyle = 'green';
+            context.lineWidth = 1;
+            context.stroke();
+
+            ({
+                drawHeart: function () {
+                    //二次曲线
+                    context.beginPath();
+                    context.moveTo(175, 340);
+                    context.bezierCurveTo(175, 337, 165, 325, 150, 325);
+                    context.bezierCurveTo(120, 325, 120, 362.5, 120, 362.5);
+                    context.bezierCurveTo(120, 380, 140, 402, 175, 420);
+                    context.bezierCurveTo(210, 402, 230, 380, 230, 362.5);
+                    context.bezierCurveTo(230, 362.5, 230, 325, 200, 325);
+                    context.bezierCurveTo(185, 325, 175, 337, 175, 340);
+                    context.fillStyle = 'darkred';
+                    context.fill();
+                    /*//二次曲线
+                context.beginPath();
+                context.moveTo(175,365);
+                context.bezierCurveTo(175,363,173,362,170,362);
+                context.bezierCurveTo(162,362,162,370,162,370);
+                context.bezierCurveTo(162,374,166,378,175,382);
+                context.bezierCurveTo(184,378,188,374,188,370);
+                context.bezierCurveTo(188,370,188,362,180,362);
+                context.bezierCurveTo(177,362,175,362,175,365);
+                context.fillStyle = 'yellow';
+                context.fill();*/
 	        },
-            drawBorderRound: function() {
+                init: function () {
+	            var a =
 
-	            var store = {};
-
-	            var Ball = function () {
-		            this.r = -Math.PI * 0.5;
-		            this.moveR = Math.PI * 2 / 360;
-
-		            this.draw = function () {
-			            context.beginPath();
-			            context.arc(350, 380, 60, -Math.PI * 0.5, this.r, false);
-			            context.strokeStyle = 'darkred';
-			            context.lineWidth = 10;
-			            context.stroke();
-		            };
-	            };
-
-	            store[0] = new Ball();
-
-	            var drawRound = function() {
-		            // 位置变化
-		            Math.animation(-Math.PI * 0.5, Math.PI * 1.5, function (value) {
-		            	store[0].r = value;
-			            if(value < Math.PI * 1.5) {
-				            store[0].draw();
-			            }else {
-				            store[0].r = Math.PI * 1.5;
-				            store[0].draw();
-			            }
-		            }, 'Quart.easeInOut', 2000);
-	            };
-
-	            function initCanvas() {
-		            context.clearRect(290, 320, 120, 120);
-	            }
-
-	            function render() {
-		            initCanvas();
-		            drawRound();
-		            //requestAnimationFrame(render);
-	            }
-
-	            render();
-            },
-            init: function() {
-	            var a = document.querySelector(".wrapper");
+                    document.querySelector(".wrapper");
 	            if (a) {
-		            this.drawFillRound();
-		            this.drawBorderRound();
-	            }
+		            this.drawHeart(
+                    );
+                }
+                }
+            }).init();
+
+        }
+
+
+        var canvas2 = document.querySelector('.box2');
+        var context2 = canvas2.getContext('2d');
+        canvas2.width = canvas2.height = 600;
+
+        if (context2) {
+            context2.fillRect(0, 0, canvas2.width, canvas2.height);
+            context2.clearRect(0, 0, canvas2.width, canvas2.height);
+            context2.strokeRect(0, 0, canvas2.width, canvas2.height);
+
+            context2.fillStyle = 'red';
+            context2.fillRect(20, 20, 100, 100);
+            context2.fillStyle = 'yellow';
+            context2.fillRect(120, 20, 100, 100);
+            context2.fillStyle = 'green';
+            context2.fillRect(120, 120, 100, 100);
+            context2.fillStyle = 'blue';
+            context2.fillRect(20, 120, 100, 100);
+
+
+            // 设置透明度值
+            context2.globalAlpha = 0.2;
+
+            // 画半透明圆
+            for (var i = 0; i < 7; i++) {
+                //var alpha = 0.7- 0.1*i;
+                context2.beginPath();
+                context2.arc(120, 120, 10 + 10 * i, 0, Math.PI * 2, true);
+                //context2.fillStyle = 'rgba(255, 255, 255, '+ alpha.toString() +')';
+                context2.fillStyle = '#FFF';
+                context2.fill();
             }
-        }).init();
 
-	    // 贝尔赛曲线
-	    context.beginPath();
-	    context.moveTo(75,25);
-	    context.quadraticCurveTo(25,25,25,62.5);
-	    context.lineTo(25, 80);
-	    context.quadraticCurveTo(25,100,50,100);
-	    context.quadraticCurveTo(50,120,30,125);
-	    context.quadraticCurveTo(60,120,65,100);
-	    context.quadraticCurveTo(125,100,125,62.5);
-	    context.quadraticCurveTo(125,25,75,25);
-	    context.strokeStyle = 'green';
-	    context.lineWidth = 1;
-	    context.stroke();
+            var offset = 0;
 
-	    // 贝尔赛曲线
-	    context.beginPath();
-	    context.moveTo(100,200);
-	    context.quadraticCurveTo(100,180,130,180);
-	    context.lineTo(180, 180);
-	    context.quadraticCurveTo(210,180,210,200);
-	    context.lineTo(210, 220);
-	    context.quadraticCurveTo(210,240,180,240);
-	    context.lineTo(150, 240);
-	    context.lineTo(140, 260);
-	    context.lineTo(130, 240);
-	    context.quadraticCurveTo(100,240,100,220);
-	    context.lineTo(100, 200);
-	    context.strokeStyle = 'green';
-	    context.lineWidth = 1;
-	    context.stroke();
-
-        ({
-        	drawHeart: function () {
-                //二次曲线
-		        context.beginPath();
-		        context.moveTo(175,340);
-		        context.bezierCurveTo(175,337,165,325,150,325);
-		        context.bezierCurveTo(120,325,120,362.5,120,362.5);
-		        context.bezierCurveTo(120,380,140,402,175,420);
-		        context.bezierCurveTo(210,402,230,380,230,362.5);
-		        context.bezierCurveTo(230,362.5,230,325,200,325);
-		        context.bezierCurveTo(185,325,175,337,175,340);
-		        context.fillStyle = 'darkred';
-		        context.fill();
-	        },
-
-            init: function () {
-	            var a = document.querySelector(".wrapper");
-	            if (a) {
-		            this.drawHeart();
-	            }
+            function draw() {
+                context2.globalAlpha = 1;
+                context2.clearRect(230, 10, 120, 120);
+                context2.setLineDash([4, 2]);
+                context2.lineDashOffset = -offset;
+                context2.strokeStyle = '#000';
+                context2.strokeRect(240, 20, 100, 100);
             }
-        }).init();
+
+            function march() {
+                offset++;
+                if (offset > 16) {
+                    offset = 0;
+                }
+                draw();
+                setTimeout(march, 40);
+            }
+
+            march();
+        }
+
+        var canvas3 = document.querySelector('.box3');
+        var context3 = canvas3.getContext('2d');
+        canvas3.width = canvas3.height = 600;
+
+        if (context3) {
+            context3.fillRect(0, 0, canvas3.width, canvas3.height);
+            context3.clearRect(0, 0, canvas3.width, canvas3.height);
+            context3.strokeRect(0, 0, canvas3.width, canvas3.height);
+
+            var grd = context3.createLinearGradient(20, 20, 170, 20);
+            grd.addColorStop(0, "red");
+            grd.addColorStop(0.5, "green");
+            grd.addColorStop(1, "blue");
+
+            var line = context3.createLinearGradient(40, 40, 150, 40);
+            line.addColorStop(0, "black");
+            line.addColorStop(1, "white");
+
+            context3.fillStyle = grd;
+            context3.fillRect(20, 20, 150, 150);
+            context3.strokeStyle = line;
+            context3.strokeRect(40, 40, 110, 110);
+
+            var aa = context3.createLinearGradient(220, 20, 370, 170);
+            aa.addColorStop(0, "black");
+            aa.addColorStop(1, "white");
+
+            context3.fillStyle = aa;
+            context3.fillRect(220, 20, 150, 150);
+            context3.strokeRect(220, 20, 150, 150);
+
+            var ball = context3.createRadialGradient(465, 65, 25, 495, 95, 75);
+            /*ball.addColorStop(0, "#00abeb");
+        ball.addColorStop(1, "#097c25");*/
+        ball
+            .addColorStop(0, '#00abeb');
+        ball.addColorStop(0.99, '#097c25');
+        ball.addColorStop(1, 'rgba(1,159,98,0)');
+
+        context3.fillStyle = ball;
+        context3.fillRect(420, 20, 150, 150);
+
+        function drawImage() {
+
+            // 创建新 image 对象，用作图案
+            var img = new Image();
+            img.src = 'images/bike.jpg';
+            img.onload = function(){
+                // 创建图案
+                var ptrn = context3.createPattern(img,'no-repeat');
+                context3.fillStyle = ptrn;
+                context3.fillRect(20, 200, 150,150);
+
+            }
+        }
+        drawImage();
+
+        function drawShadowText() {
+            context3.shadowOffsetX = 2;
+            context3.shadowOffsetY = 2;
+            context3.shadowBlur = 2;
+            context3.shadowColor = "rgba(0, 0, 0, 0.5)";
+
+            context3.font = "20px Times New Roman";
+            context3.fillStyle = "#5f52a0";
+            context3.fillText("Sample String", 200, 210);
+        }
+        drawShadowText();
+
+        function drawImage2() {
+            var img = new Image();
+            img.onload = function (){
+                for (var i=0; i <4; i++){
+                    for (var j= 0; j < 3; j++) {
+                        context3.drawImage(img, 400 + j * 50, 200 + i * 38, 50, 38);
+                    }
+                }
+            };
+            img.src = 'https://mdn.mozillademos.org/files/5397/rhino.jpg';
+        }
+
+            drawImage2();
+        }
+
+        function drawGallery() {
+            // Loop through all images
+            var box = document.querySelector('.image-box');
+
+            /*for (var i = 0; i < 4; i++) {
+                var num = i + 1;
+                // Don't add a canvas for the frame image
+
+                // Create canvas element
+                canvas = document.createElement('CANVAS');
+                canvas.setAttribute('width', 200);
+                canvas.setAttribute('height', 160);
+
+                // Insert before the image
+                box.insertBefore(canvas, null);
+
+                ctx = canvas.getContext('2d');
+
+                // Draw image to canvas
+                //ctx.drawImage(document.images[i], 0 , 0);
+                //console.log(document.images[i]);
+
+                // Add frame
+                //console.log(document.getElementById('frame'));
+                //ctx.drawImage(document.getElementById('frame'), 0, 0);
+
+                preImage("images/" + num + ".jpg", function () {
+                    ctx.drawImage(this, 20, 20, 160, 120);
+                });
+
+                preImage("images/frame.png", function () {
+                    ctx.drawImage(this, 0, 0, 200, 160);
+                });
+
+            }*/
+
+            // Loop through all images
+            for (i=0;i<document.images.length;i++){
+
+                // Don't add a canvas for the frame image
+                if (document.images[i].getAttribute('id')!='frame'){
+
+                    // Create canvas element
+                    canvas = document.createElement('CANVAS');
+                    canvas.setAttribute('width', 200);
+                    canvas.setAttribute('height', 160);
+
+                    // Insert before the image
+                    document.images[i].parentNode.insertBefore(canvas,document.images[i]);
+
+                    ctx = canvas.getContext('2d');
+
+                    // Draw image to canvas
+                    ctx.drawImage(document.images[i], 20, 20, 160, 120);
+
+                    // Add frame
+                    ctx.drawImage(document.getElementById('frame'), 0, 0, 200, 160);
+                }
+            }
+
+            function preImage(url, callback) {
+                var img = new Image(); //创建一个Image对象，实现图片的预下载
+                img.src = url;
+
+                if (img.complete) { // 如果图片已经存在于浏览器缓存，直接调用回调函数
+                    callback.call(img);
+                    return; // 直接返回，不用再处理onload事件
+                }
+
+                img.onload = function () { //图片下载完毕时异步调用callback函数。
+                    callback.call(img);//将回调函数的this替换为Image对象
+                };
+            }
 
 
+        }
+
+        drawGallery();
     }
-
 
 </script>
 
