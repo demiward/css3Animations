@@ -227,6 +227,7 @@
                 canvas.width = canvas.height = 300;
                 var ctx = canvas.getContext('2d');
                 ctx.arc(150, 150, 100, 0, Math.PI * 2, true);
+	            ctx.translate(150, 150);
 
                 let location = {
                     x: 0,
@@ -256,32 +257,32 @@
                 ];
 
                 function initCanvas() {
-                    ctx.clearRect(20, 20, 260, 260);
+                    ctx.clearRect(-130, -130, 260, 260);
                 }
 
                 var initData = function () {
 
                     this.draw = function () {
-                        ctx.beginPath();
-                        ctx.moveTo(0, 0);
-                        ctx.arc(0, 0, this.R, this.startR, this.endR, false);
-                        ctx.lineTo(0, 0);
-                        ctx.fillStyle = 'rgb(126, ' + this.g + ',' + this.b + ')';
-                        ctx.fill();
+	                    ctx.beginPath();
+	                    ctx.moveTo(0, 0);
+	                    ctx.arc(0, 0, this.R, this.startR, this.endR, false);
+	                    ctx.lineTo(0, 0);
+	                    ctx.fillStyle = 'rgb(102, ' + this.g + ',' + this.b + ')';
+	                    ctx.fill();
 
-                        if (ctx.isPointInPath(location.x, location.y)) {
-                            ctx.beginPath();
+                        if(ctx.isPointInPath(location.x, location.y)) {
+	                        initCanvas();
+                            /*ctx.beginPath();
                             ctx.moveTo(0, 0);
                             ctx.arc(0, 0, this.R, this.startR, this.endR, false);
                             ctx.lineTo(0, 0);
                             ctx.fillStyle = '#FFF';
-                            ctx.fill();
-
-                            ctx.beginPath();
+                            ctx.fill();*/
+	                        ctx.beginPath();
                             ctx.moveTo(this.newX, this.newY);
                             ctx.arc(this.newX, this.newY, this.R + 10, this.startR, this.endR, false);
                             ctx.lineTo(this.newX, this.newY);
-                            ctx.fillStyle = 'rgb(126, ' + this.g + ',' + this.b + ')';
+                            ctx.fillStyle = 'rgb(102, ' + this.g + ',' + this.b + ')';
                             ctx.fill();
                         }
                     }
@@ -291,8 +292,7 @@
                 function draw() {
                     initCanvas();
                     let aa = new initData();
-                    ctx.save();
-                    ctx.translate(150, 150);
+                    //ctx.save();
                     aa.startR = -Math.PI * 0.5;
                     aa.R = 80;
 
@@ -306,7 +306,7 @@
                         aa.draw();
                         aa.startR = aa.endR;
                     }
-                    ctx.restore();
+                    //ctx.restore();
                 }
 
                 draw();
