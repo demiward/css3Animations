@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/tween.js" type="text/javascript"></script>
+    <script src="js/animation.js" type="text/javascript"></script>
+    <style rel="stylesheet">
+        canvas {
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <canvas class="box1"></canvas>
+    <canvas class="box2"></canvas>
+    <canvas class="box3"></canvas>
+    <canvas class="box4"></canvas>
+    <canvas class="box5"></canvas>
+</div>
+
+<script>
+    window.onload = function () {
+        ({
+            drawHeart: function () {
+                var canvas = document.querySelector('.box1');
+                canvas.width = canvas.height = 300;
+                var ctx = canvas.getContext('2d');
+
+                function initCanvas() {
+                    ctx.clearRect(-100, -100, 200, 200);
+                }
+
+                function heart(ctx, scale) {
+                    ctx.scale(scale, scale);
+                    ctx.beginPath();
+                    ctx.moveTo(0, -40);
+                    ctx.bezierCurveTo(0, -43, -10, -55, -25, -55);
+                    ctx.bezierCurveTo(-55, -55, -55, -22.5, -55, -22.5);
+                    ctx.bezierCurveTo(-55, 0, -35, 22, 0, 40);
+                    ctx.bezierCurveTo(35, 22, 55, 0, 55, -22.5);
+                    ctx.bezierCurveTo(55, -22.5, 55, -55, 25, -55);
+                    ctx.bezierCurveTo(10, -55, 0, -43, 0, -40);
+                }
+
+                function draw() {
+                    //ctx.save();
+                    //ctx.translate(150, 150);
+                    /*heart(ctx, 1);
+                    ctx.fillStyle = 'darkred';
+                    ctx.fill();
+
+                    heart(ctx, 0.8);
+                    ctx.fillStyle = 'blue';
+                    ctx.fill();
+
+                    heart(ctx, 0.5);
+                    ctx.fillStyle = 'green';
+                    ctx.fill();*/
+
+                    /*for(var i=0; i<6; i++) {
+                        initCanvas();
+                        heart(ctx, 1 - 0.1 * i);
+                        var g = 51*i;
+                        var b = 255 - 255*i;
+                        ctx.fillStyle = 'rgb(155, ' + g.toString() + ',' + b.toString() + ')';
+                        ctx.fill();
+                    }*/
+                    ctx.translate(150, 150);
+                    Math.animation(0, 6, function (value) {
+                        if(value > 0) {
+                            initCanvas();
+                            const scale = 1 - 0.1 * value;
+                            heart(ctx, scale);
+                            var g = Math.ceil(51*value);
+                            var b = 255 - Math.ceil(51*value);
+                            ctx.fillStyle = 'rgb(155, ' + g.toString() + ',' + b.toString() + ')';
+                            ctx.fill();
+
+                            if(Math.ceil(value) == 6) {
+                                heart(ctx, 0.4);
+                                return;
+                            }
+                        }
+                    }, 'Back.easeOut', 5000);
+                    //ctx.restore();
+                }
+
+                function render() {
+                    draw();
+                    //requestAnimationFrame(render);
+                }
+                render();
+            },
+
+            drawGalaxy: function () {
+                var canvas = document.querySelector('.box2');
+                canvas.width = canvas.height = 300;
+
+                var sun = new Image();
+                var moon = new Image();
+                var earth = new Image();
+                function init(){
+                    sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
+                    moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
+                    earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+                    window.requestAnimationFrame(draw);
+                }
+
+                function draw() {
+                    var ctx = canvas.getContext('2d');
+
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.clearRect(0,0,300,300); // clear canvas
+
+                    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+                    ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+                    ctx.save();
+                    ctx.translate(150,150);
+
+                    // Earth
+                    var time = new Date();
+                    ctx.rotate( ((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds() );
+                    ctx.translate(105,0);
+                    ctx.fillRect(0,-12,50,24); // Shadow
+                    ctx.drawImage(earth,-12,-12);
+
+                    // Moon
+                    ctx.save();
+                    ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
+                    ctx.translate(0,28.5);
+                    ctx.drawImage(moon,-3.5,-3.5);
+                    ctx.restore();
+
+                    ctx.restore();
+
+                    ctx.beginPath();
+                    ctx.arc(150,150,105,0,Math.PI*2,false); // Earth orbit
+                    ctx.stroke();
+
+                    ctx.drawImage(sun,0,0,300,300);
+
+                    window.requestAnimationFrame(draw);
+                }
+
+                init();
+            },
+
+            drawBall: function () {
+                var canvas = document.querySelector('.box3');
+                canvas.width = canvas.height = 300;
+                var ctx = canvas.getContext('2d');
+                var raf;
+                var running = false;
+
+                var ball = {
+                    x: 100,
+                    y: 100,
+                    vx: 5,
+                    vy: 1,
+                    radius: 25,
+                    color: 'blue',
+                    draw: function() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+                        ctx.closePath();
+                        ctx.fillStyle = this.color;
+                        ctx.fill();
+                    }
+                };
+
+                function clear() {
+                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+                }
+
+                function draw() {
+                    clear();
+                    ball.draw();
+                    ball.x += ball.vx;
+                    ball.y += ball.vy;
+                    //ball.vy *= .99;
+                    ball.vy += .25;
+
+                    if (ball.y + ball.vy + 25 > canvas.height || ball.y + ball.vy - 25 < 0) {
+                        ball.vy = -ball.vy;
+                    }
+                    if (ball.x + ball.vx + 25 > canvas.width || ball.x + ball.vx - 25 < 0) {
+                        ball.vx = -ball.vx;
+                    }
+
+                    raf = window.requestAnimationFrame(draw);
+                }
+
+                canvas.addEventListener('mousemove', function(e){
+                    if (!running) {
+                        clear();
+                        ball.x = e.clientX - 600 - 8 - 8;
+                        ball.y = e.clientY - 8;
+                        ball.draw();
+                    }
+                });
+
+                canvas.addEventListener("click",function(e){
+                    if (!running) {
+                        raf = window.requestAnimationFrame(draw);
+                        running = true;
+                    }
+                });
+
+                canvas.addEventListener("mouseout",function(e){
+                    window.cancelAnimationFrame(raf);
+                    running = false;
+                });
+
+                ball.draw();
+            },
+
+            drawPieChart: function () {
+                var canvas = document.querySelector('.box4');
+                canvas.width = canvas.height = 300;
+                var ctx = canvas.getContext('2d');
+                ctx.arc(150, 150, 100, 0, Math.PI * 2, true);
+
+                let location = {
+                    x: 0,
+                    y: 0
+                };
+
+                var bbox = canvas.getBoundingClientRect();
+
+                canvas.onmousemove = function(e){
+                    location.x = e.clientX - bbox.left;
+                    location.y = e.clientY - bbox.top;
+                    draw();
+                };
+
+                canvas.onclick = function(e){
+                    location.x = e.clientX - bbox.left;
+                    location.y = e.clientY - bbox.top;
+                    draw();
+                };
+
+                const arr = [
+                    {name: '001', percent: 0.2},
+                    {name: '002', percent: 0.1},
+                    {name: '003', percent: 0.35},
+                    {name: '004', percent: 0.3},
+                    {name: '005', percent: 0.05}
+                ];
+
+                function initCanvas() {
+                    ctx.clearRect(20, 20, 260, 260);
+                }
+
+                var initData = function () {
+
+                    this.draw = function () {
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.arc(0, 0, this.R, this.startR, this.endR, false);
+                        ctx.lineTo(0, 0);
+                        ctx.fillStyle = 'rgb(126, ' + this.g + ',' + this.b + ')';
+                        ctx.fill();
+
+                        if (ctx.isPointInPath(location.x, location.y)) {
+                            ctx.beginPath();
+                            ctx.moveTo(0, 0);
+                            ctx.arc(0, 0, this.R, this.startR, this.endR, false);
+                            ctx.lineTo(0, 0);
+                            ctx.fillStyle = '#FFF';
+                            ctx.fill();
+
+                            ctx.beginPath();
+                            ctx.moveTo(this.newX, this.newY);
+                            ctx.arc(this.newX, this.newY, this.R + 10, this.startR, this.endR, false);
+                            ctx.lineTo(this.newX, this.newY);
+                            ctx.fillStyle = 'rgb(126, ' + this.g + ',' + this.b + ')';
+                            ctx.fill();
+                        }
+                    }
+
+                };
+
+                function draw() {
+                    initCanvas();
+                    let aa = new initData();
+                    ctx.save();
+                    ctx.translate(150, 150);
+                    aa.startR = -Math.PI * 0.5;
+                    aa.R = 80;
+
+                    for (var i = 0; i < arr.length; i++) {
+                        aa.endR = aa.startR + arr[i].percent * Math.PI * 2;
+                        aa.g = Math.ceil(i * 255 / arr.length);
+                        aa.b = Math.ceil(1 - i * 255 / arr.length);
+
+                        aa.newX = Math.sin(aa.startR + arr[i].percent * Math.PI + Math.PI * 0.5) * 10;
+                        aa.newY = -Math.cos(aa.startR + arr[i].percent * Math.PI + Math.PI * 0.5) * 10;
+                        aa.draw();
+                        aa.startR = aa.endR;
+                    }
+                    ctx.restore();
+                }
+
+                draw();
+            },
+
+            drawClip: function () {
+                function draw() {
+                    var canvas = document.querySelector('.box5');
+                    canvas.width = canvas.height = 300;
+                    var ctx = canvas.getContext('2d');
+                    ctx.fillRect(0,0,300,300);
+                    ctx.translate(150,150);
+
+                    // Create a circular clipping path
+                    ctx.beginPath();
+                    ctx.arc(0,0,60,0,Math.PI*2,true);
+                    ctx.clip();
+
+                    // draw background
+                    var lingrad = ctx.createLinearGradient(0,-75,0,75);
+                    lingrad.addColorStop(0, '#232256');
+                    lingrad.addColorStop(1, '#143778');
+
+                    ctx.fillStyle = lingrad;
+                    ctx.fillRect(-150,-150,300,300);
+
+                    // draw stars
+                    for (var j=1;j<50;j++){
+                        ctx.save();
+                        ctx.fillStyle = '#fff';
+                        ctx.translate(75-Math.floor(Math.random()*150),
+                            75-Math.floor(Math.random()*150));
+                        drawStar(ctx,Math.floor(Math.random()*4)+2);
+                        ctx.restore();
+                    }
+
+                }
+
+                draw();
+
+                function drawStar(ctx,r){
+                    ctx.save();
+                    ctx.beginPath()
+                    ctx.moveTo(r,0);
+                    for (var i=0;i<9;i++){
+                        ctx.rotate(Math.PI/5);
+                        if(i%2 == 0) {
+                            ctx.lineTo((r/0.525731)*0.200811,0);
+                        } else {
+                            ctx.lineTo(r,0);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
+            },
+
+            init: function () {
+                var a = document.querySelector(".wrapper");
+                if (a) {
+                    this.drawHeart();
+                    this.drawGalaxy();
+                    this.drawBall();
+                    this.drawPieChart();
+                    this.drawClip();
+                }
+            }
+        }).init();
+    }
+</script>
+
+</body>
+</html>

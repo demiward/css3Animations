@@ -200,43 +200,6 @@
             context.strokeStyle = 'green';
             context.lineWidth = 1;
             context.stroke();
-
-            ({
-                drawHeart: function () {
-                    //二次曲线
-                    context.beginPath();
-                    context.moveTo(175, 340);
-                    context.bezierCurveTo(175, 337, 165, 325, 150, 325);
-                    context.bezierCurveTo(120, 325, 120, 362.5, 120, 362.5);
-                    context.bezierCurveTo(120, 380, 140, 402, 175, 420);
-                    context.bezierCurveTo(210, 402, 230, 380, 230, 362.5);
-                    context.bezierCurveTo(230, 362.5, 230, 325, 200, 325);
-                    context.bezierCurveTo(185, 325, 175, 337, 175, 340);
-                    context.fillStyle = 'darkred';
-                    context.fill();
-                    /*//二次曲线
-                context.beginPath();
-                context.moveTo(175,365);
-                context.bezierCurveTo(175,363,173,362,170,362);
-                context.bezierCurveTo(162,362,162,370,162,370);
-                context.bezierCurveTo(162,374,166,378,175,382);
-                context.bezierCurveTo(184,378,188,374,188,370);
-                context.bezierCurveTo(188,370,188,362,180,362);
-                context.bezierCurveTo(177,362,175,362,175,365);
-                context.fillStyle = 'yellow';
-                context.fill();*/
-	        },
-                init: function () {
-	            var a =
-
-                    document.querySelector(".wrapper");
-	            if (a) {
-		            this.drawHeart(
-                    );
-                }
-                }
-            }).init();
-
         }
 
 
@@ -272,27 +235,35 @@
                 context2.fill();
             }
 
-            var offset = 0;
+            ({
+                drawMarch: function () {
+                    var offset = 0;
+                    function draw() {
+                        context2.globalAlpha = 1;
+                        context2.clearRect(230, 10, 120, 120);
+                        context2.setLineDash([4, 2]);
+                        context2.lineDashOffset = -offset;
+                        context2.strokeStyle = '#000';
+                        context2.strokeRect(240, 20, 100, 100);
+                    }
 
-            function draw() {
-                context2.globalAlpha = 1;
-                context2.clearRect(230, 10, 120, 120);
-                context2.setLineDash([4, 2]);
-                context2.lineDashOffset = -offset;
-                context2.strokeStyle = '#000';
-                context2.strokeRect(240, 20, 100, 100);
-            }
-
-            function march() {
-                offset++;
-                if (offset > 16) {
-                    offset = 0;
+                    function march() {
+                        offset++;
+                        if (offset > 16) {
+                            offset = 0;
+                        }
+                        draw();
+                        setTimeout(march, 40);
+                    }
+                    march();
+                },
+                init: function () {
+                    var a = document.querySelector(".wrapper");
+                    if (a) {
+                        this.drawMarch();
+                    }
                 }
-                draw();
-                setTimeout(march, 40);
-            }
-
-            march();
+            }).init();
         }
 
         var canvas3 = document.querySelector('.box3');
@@ -485,9 +456,9 @@
 	    function drawTranslate() {
 	    	context4.strokeStyle = '#000';
 	    	context4.strokeRect(0, 0, 600, 600);
-		    context4.fillRect(0,0,300,300);
-		    for (var i=0;i<3;i++) {
-			    for (var j=0;j<3;j++) {
+		    context4.fillRect(0,0,400,400);
+		    for (var i=0;i<4;i++) {
+			    for (var j=0;j<4;j++) {
 				    context4.save();
 				    context4.strokeStyle = "#9CFF00";
 				    context4.translate(50+j*100,50+i*100);
@@ -503,7 +474,7 @@
 		    ctx.beginPath();
 		    ctx.moveTo(x1,y1);
 		    do {
-			    if (i>20000) break;
+			    if (i>2000) break;
 			    var x2 = (R+r)*Math.cos(i*Math.PI/72) - (r+O)*Math.cos(((R+r)/r)*(i*Math.PI/72))
 			    var y2 = (R+r)*Math.sin(i*Math.PI/72) - (r+O)*Math.sin(((R+r)/r)*(i*Math.PI/72))
 			    ctx.lineTo(x2,y2);
@@ -513,8 +484,26 @@
 		    } while (x2 != R-O && y2 != 0 );
 		    ctx.stroke();
 	    }
-
 	    drawTranslate();
+
+        function drawRotate() {
+            context4.translate(440,180);
+
+            for (var i=1;i<6;i++){ // Loop through rings (from inside to out)
+                context4.save();
+                context4.fillStyle = 'rgb('+(51*i)+','+(255-51*i)+',255)';
+
+                for (var j=0;j<i*6;j++){ // draw individual dots
+                    context4.rotate(Math.PI*2/(i*6));
+                    context4.beginPath();
+                    context4.arc(0,i*25,10,0,Math.PI*2,false);
+                    context4.fill();
+                }
+
+                context4.restore();
+            }
+        }
+        drawRotate();
 
     }
 
